@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atharva Gupta - Digital Architect & Creator</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #A1A1AA; 
+            overflow-x: hidden;
+        }
+        /* Animated Background */
+        #main-content {
+            position: relative;
+            z-index: 1;
+        }
+        #background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #00DFD8, #007CF0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        /* Advanced Glassmorphism Card Effect */
+        .section-card {
+            background: rgba(15, 23, 42, 0.3);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.1);
+            border-radius: 1rem;
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.4s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.4s ease;
+        }
+        .section-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 223, 216, 0.15);
+            border-color: rgba(0, 223, 216, 0.3);
+        }
+        .glow-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 223, 216, 0.3);
+        }
+        .glow-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 223, 216, 0.5), 0 0 45px rgba(0, 124, 240, 0.4);
+        }
+        /* Scroll Animation Class */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 1.2s cubic-bezier(0.165, 0.84, 0.44, 1), transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Custom Table Styling */
+        .education-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .education-table th, .education-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+        }
+        .education-table th {
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.75rem;
+        }
+        .education-table tr { transition: background-color 0.3s ease; }
+        .education-table tbody tr:hover { background-color: rgba(56, 189, 248, 0.05); }
+        .education-table tbody tr:last-child td { border-bottom: none; }
+        .grade-pill {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-align: center;
+            min-width: 60px;
+        }
+        .grade-a-star { background-color: rgba(0, 223, 216, 0.1); color: #00DFD8; }
+        .grade-7 { background-color: rgba(0, 124, 240, 0.1); color: #007CF0; }
+        
+        /* Contact Form Styling */
+        .form-group { position: relative; margin-bottom: 2rem; }
+        .form-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #475569;
+            padding: 0.5rem 0;
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .form-input:focus { outline: none; border-color: #00DFD8; }
+        .form-label {
+            position: absolute;
+            top: 0.5rem;
+            left: 0;
+            color: #94a3b8;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus + .form-label, .form-input:not(:placeholder-shown) + .form-label {
+            top: -1.2rem;
+            font-size: 0.875rem;
+            color: #00DFD8;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <canvas id="background-canvas"></canvas>
+    <div id="main-content">
+        <!-- Header & Navigation -->
+        <header class="bg-black/30 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 border-b border-slate-800">
+            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <a href="#" class="text-3xl font-black gradient-text">AG</a>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#about" class="text-slate-300 hover:text-cyan-300 transition-colors duration-300">About</a>
+                    <a href="#education" class="text-slate-300 hover:text-cyan-300 transition-colors duration-300">Education</a>
+                    <a href="#achievements" class="text-slate-300 hover:text-cyan-300 transition-colors duration-300">Achievements</a>
+                    <a href="#skills" class="text-slate-300 hover:text-cyan-300 transition-colors duration-300">Skills</a>
+                    <a href="#contact" class="text-slate-300 hover:text-cyan-300 transition-colors duration-300">Contact</a>
+                </nav>
+                <a href="#contact" class="hidden md:block bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold px-5 py-2 rounded-lg shadow-lg glow-button">
+                    Hire Me
+                </a>
+                <button id="mobile-menu-button" class="md:hidden text-slate-300 focus:outline-none"><i class="fas fa-bars text-xl"></i></button>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden"><a href="#about" class="block px-6 py-3 text-slate-300 hover:bg-slate-800">About</a><a href="#education" class="block px-6 py-3 text-slate-300 hover:bg-slate-800">Education</a><a href="#achievements" class="block px-6 py-3 text-slate-300 hover:bg-slate-800">Achievements</a><a href="#skills" class="block px-6 py-3 text-slate-300 hover:bg-slate-800">Skills</a><a href="#contact" class="block px-6 py-3 text-slate-300 hover:bg-slate-800">Contact</a></div>
+        </header>
+
+        <main class="pt-24 container mx-auto px-6">
+            <!-- Hero Section -->
+            <section id="home" data-animation="rain" class="py-24 md:py-40 text-center">
+                <div class="max-w-4xl mx-auto relative z-10">
+                    <h1 id="hero-title" class="text-5xl md:text-7xl font-black text-slate-50 leading-tight mb-4" data-value="Atharva Gupta">Atharva Gupta</h1>
+                    <p class="text-lg md:text-xl text-slate-400 mb-8 max-w-2xl mx-auto">A Full-Stack Developer, National-Level Athlete, and Musician from Jaipur, India, crafting high-end digital experiences.</p>
+                    <a href="#contact" class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 px-8 rounded-full shadow-xl glow-button inline-block">Let's Build Something</a>
+                </div>
+            </section>
+
+            <!-- About Me Section -->
+            <section id="about" data-animation="neural" class="py-24"><div class="reveal flex flex-col md:flex-row items-center gap-12"><div class="md:w-1/3"><img src="https://placehold.co/400x400/0A0A0A/00DFD8?text=AG" alt="Atharva Gupta" class="rounded-full shadow-2xl mx-auto border-4 border-slate-800 hover:border-cyan-400 transition-all duration-300"></div><div class="md:w-2/3 text-center md:text-left"><h2 class="text-3xl font-bold text-slate-50 mb-4">About Me</h2><p class="text-slate-400 leading-relaxed mb-4">I'm a passionate and driven individual based in the vibrant city of Jaipur, Rajasthan. My journey is a unique blend of technology, sports, and music. I thrive on challenges, whether it's architecting a complex web application, competing on the squash court at a national level, or mastering intricate guitar melodies.</p><p class="text-slate-400 leading-relaxed">This multidisciplinary background has equipped me with a unique perspective, strong discipline, and a relentless desire for excellence. I'm currently open to freelance opportunities where I can leverage my skills to build innovative and impactful digital solutions.</p></div></div></section>
+            
+            <!-- Education Section -->
+            <section id="education" data-animation="glyphs" class="py-24">
+                <div class="reveal text-center mb-12"><h2 class="text-3xl font-bold text-slate-50">Academic Excellence</h2><p class="text-slate-400 mt-2">A foundation of strong academic achievements.</p></div>
+                <div class="reveal grid md:grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- IGCSE Card -->
+                    <div class="section-card p-6">
+                        <h3 class="font-bold text-xl text-slate-200 mb-4 flex items-center"><i class="fas fa-graduation-cap text-cyan-400 mr-3"></i>IGCSE Results</h3>
+                        <table class="education-table">
+                            <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
+                            <tbody>
+                                <tr><td>Additional Mathematics</td><td><span class="grade-pill grade-a-star">A*</span></td></tr>
+                                <tr><td>Extended Mathematics</td><td><span class="grade-pill grade-a-star">A*</span></td></tr>
+                                <tr><td>Physics</td><td><span class="grade-pill grade-a-star">A*</span></td></tr>
+                                <tr><td>Chemistry</td><td><span class="grade-pill grade-a-star">A*</span></td></tr>
+                                <tr><td>Computer Science</td><td><span class="grade-pill grade-a-star">A*</span></td></tr>
+                                <tr><td>Economics</td><td><span class="grade-pill grade-a-star">A*</span></td></tr>
+                                <tr><td>French</td><td><span class="grade-pill grade-a-star">A*</span></td></tr>
+                                <tr><td>English</td><td><span class="grade-pill grade-a-star">A*</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- IB Card -->
+                    <div class="section-card p-6">
+                        <h3 class="font-bold text-xl text-slate-200 mb-4 flex items-center"><i class="fas fa-book-open-reader text-blue-400 mr-3"></i>IB Diploma Results</h3>
+                        <table class="education-table">
+                            <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
+                            <tbody>
+                                <tr><td>Math Analysis & Approaches (HL)</td><td><span class="grade-pill grade-7">7</span></td></tr>
+                                <tr><td>Computer Science (HL)</td><td><span class="grade-pill grade-7">7</span></td></tr>
+                                <tr><td>Economics (HL)</td><td><span class="grade-pill grade-7">7</span></td></tr>
+                                <tr><td>Business Management (SL)</td><td><span class="grade-pill grade-7">7</span></td></tr>
+                                <tr><td>English (SL)</td><td><span class="grade-pill grade-7">7</span></td></tr>
+                                <tr><td>Hindi (SL)</td><td><span class="grade-pill grade-7">7</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements Section -->
+            <section id="achievements" data-animation="neural" class="py-24"><div class="reveal text-center mb-12"><h2 class="text-3xl font-bold text-slate-50">Passions & Pursuits</h2><p class="text-slate-400 mt-2">A glimpse into my passions beyond academics and code.</p></div><div class="reveal grid md:grid-cols-2 gap-8"><div class="section-card p-8"><div class="flex items-center mb-4"><i class="fas fa-trophy text-3xl text-cyan-400 mr-4"></i><h3 class="text-2xl font-bold text-slate-50">National Level Squash</h3></div><p class="text-slate-400">As a dedicated athlete, I have competed in squash at the national level. This journey has instilled in me immense discipline and a competitive spirit. I'm proud to have won multiple tournaments.</p></div><div class="section-card p-8"><div class="flex items-center mb-4"><i class="fas fa-guitar text-3xl text-blue-400 mr-4"></i><h3 class="text-2xl font-bold text-slate-50">Guitar Virtuoso</h3></div><p class="text-slate-400">Music is my creative outlet. I have completed Trinity examinations for acoustic guitar and am currently on Grade 6 for electric guitar, exploring genres from blues to rock.</p></div></div></section>
+
+            <!-- Skills Section -->
+            <section id="skills" data-animation="code" class="py-24">
+                <div class="reveal text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-50">My Tech Stack</h2>
+                    <p class="text-slate-400 mt-2">A versatile toolkit for building modern web solutions.</p>
+                </div>
+                <div class="reveal max-w-4xl mx-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-8 text-center">
+                    <div class="flex flex-col items-center p-4 transition-transform duration-300 hover:scale-110"><img src="https://www.vectorlogo.zone/logos/w3_html5/w3_html5-icon.svg" alt="HTML5" class="h-16 w-16 mb-2"><span class="text-slate-300">HTML5</span></div>
+                    <div class="flex flex-col items-center p-4 transition-transform duration-300 hover:scale-110"><img src="https://www.vectorlogo.zone/logos/w3_css/w3_css-icon.svg" alt="CSS3" class="h-16 w-16 mb-2"><span class="text-slate-300">CSS3</span></div>
+                    <div class="flex flex-col items-center p-4 transition-transform duration-300 hover:scale-110"><img src="https://www.vectorlogo.zone/logos/javascript/javascript-icon.svg" alt="JavaScript" class="h-16 w-16 mb-2"><span class="text-slate-300">JavaScript</span></div>
+                    <div class="flex flex-col items-center p-4 transition-transform duration-300 hover:scale-110"><img src="https://www.vectorlogo.zone/logos/reactjs/reactjs-icon.svg" alt="React.js" class="h-16 w-16 mb-2"><span class="text-slate-300">React.js</span></div>
+                    <div class="flex flex-col items-center p-4 transition-transform duration-300 hover:scale-110"><img src="https://www.vectorlogo.zone/logos/nextjs/nextjs-icon.svg" alt="Next.js" class="h-16 w-16 mb-2 bg-white rounded-full p-1"><span class="text-slate-300">Next.js</span></div>
+                    <div class="flex flex-col items-center p-4 transition-transform duration-300 hover:scale-110"><img src="https://www.vectorlogo.zone/logos/php/php-icon.svg" alt="PHP" class="h-16 w-16 mb-2"><span class="text-slate-300">PHP</span></div>
+                    <div class="flex flex-col items-center p-4 transition-transform duration-300 hover:scale-110"><img src="https://seeklogo.com/images/A/ajax-logo-4424A91396-seeklogo.com.png" alt="AJAX" class="h-16 w-16 mb-2"><span class="text-slate-300">AJAX</span></div>
+                    <div class="flex flex-col items-center p-4 transition-transform duration-300 hover:scale-110"><img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" alt="Tailwind CSS" class="h-16 w-16 mb-2"><span class="text-slate-300">Tailwind</span></div>
+                    <div class="flex flex-col items-center p-4 transition-transform duration-300 hover:scale-110"><img src="https://www.vectorlogo.zone/logos/nodejs/nodejs-icon.svg" alt="Node.js" class="h-16 w-16 mb-2"><span class="text-slate-300">Node.js</span></div>
+                    <div class="flex flex-col items-center p-4 transition-transform duration-300 hover:scale-110"><div class="h-16 w-16 mb-2 flex items-center justify-center bg-slate-700/50 rounded-full"><span class="text-3xl font-bold text-cyan-400">...</span></div><span class="text-slate-300">And More</span></div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" data-animation="rain" class="py-24">
+                <div class="reveal text-center">
+                    <h2 class="text-3xl font-bold text-slate-50">Let's Build Something</h2>
+                    <p class="text-slate-400 mt-2 mb-12 max-w-xl mx-auto">I'm currently available for freelance projects. Have an idea? Let's turn it into reality.</p>
+                    
+                    <div class="grid md:grid-cols-3 gap-8 mb-12 text-left">
+                        <div class="section-card p-6"><h4 class="font-bold text-lg text-cyan-300 mb-2">Full-Stack Development</h4><p class="text-sm text-slate-400">From database to UI, I build complete, robust, and scalable web applications.</p></div>
+                        <div class="section-card p-6"><h4 class="font-bold text-lg text-cyan-300 mb-2">Interactive UI/UX</h4><p class="text-sm text-slate-400">Crafting intuitive and engaging user experiences with a focus on modern design principles.</p></div>
+                        <div class="section-card p-6"><h4 class="font-bold text-lg text-cyan-300 mb-2">Performance Optimization</h4><p class="text-sm text-slate-400">Ensuring your website is fast, responsive, and optimized for all devices.</p></div>
+                    </div>
+
+                    <div class="max-w-2xl mx-auto section-card rounded-2xl p-8">
+                        <form id="contact-form">
+                            <div class="form-group"><input type="text" id="name" name="name" class="form-input" placeholder=" " required><label for="name" class="form-label">Name</label></div>
+                            <div class="form-group"><input type="email" id="email" name="email" class="form-input" placeholder=" " required><label for="email" class="form-label">Email</label></div>
+                            <div class="form-group"><textarea id="message" name="message" rows="1" class="form-input" placeholder=" " required></textarea><label for="message" class="form-label">Message</label></div>
+                            <div class="text-center"><button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold py-3 px-8 rounded-full shadow-xl glow-button">Send Message</button></div>
+                        </form>
+                        <div id="form-message" class="text-center mt-6 text-green-400 font-semibold"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-slate-800 py-8 mt-16"><div class="container mx-auto px-6 text-center text-slate-400"><p>&copy; 2024 Atharva Gupta. All Rights Reserved.</p><p class="mt-2">Designed & Built with <i class="fas fa-heart text-cyan-400"></i> in Jaipur, India.</p></div></footer>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Context-Aware Background Animation Engine ---
+        const canvas = document.getElementById('background-canvas');
+        const ctx = canvas.getContext('2d');
+        let currentAnimation = 'rain'; // Default animation
+        let animationFrameId;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let mouse = { x: canvas.width / 2, y: canvas.height / 2, radius: 100 };
+
+        // --- Animation 1: Digital Rain ---
+        let rainEffect;
+        class RainSymbol {
+            constructor(x, y, fontSize, canvasHeight){
+                this.characters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ';
+                this.x = x;
+                this.y = y;
+                this.fontSize = fontSize;
+                this.text = '';
+                this.canvasHeight = canvasHeight;
+            }
+            draw(context){
+                this.text = this.characters.charAt(Math.floor(Math.random() * this.characters.length));
+                context.fillText(this.text, this.x * this.fontSize, this.y * this.fontSize);
+                if(this.y * this.fontSize > this.canvasHeight && Math.random() > 0.98){
+                    this.y = 0;
+                } else {
+                    this.y += 1;
+                }
+            }
+        }
+
+        class RainEffect {
+            constructor(canvasWidth, canvasHeight){
+                this.canvasWidth = canvasWidth;
+                this.canvasHeight = canvasHeight;
+                this.fontSize = 16;
+                this.columns = this.canvasWidth/this.fontSize;
+                this.symbols = [];
+                this.#initialize();
+            }
+            #initialize(){
+                for (let i = 0; i < this.columns; i++){
+                    this.symbols[i] = new RainSymbol(i, 0, this.fontSize, this.canvasHeight);
+                }
+            }
+            resize(width, height){
+                this.canvasWidth = width;
+                this.canvasHeight = height;
+                this.columns = this.canvasWidth/this.fontSize;
+                this.symbols = [];
+                this.#initialize();
+            }
+        }
+        
+        function initRain() {
+            rainEffect = new RainEffect(canvas.width, canvas.height);
+        }
+
+        function drawRain() {
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = rainEffect.fontSize + 'px monospace';
+            rainEffect.symbols.forEach(symbol => {
+                 const distance = Math.sqrt(Math.pow(mouse.x - (symbol.x * symbol.fontSize), 2) + Math.pow(mouse.y - (symbol.y * symbol.fontSize), 2));
+                if (distance < mouse.radius) {
+                    symbol.y -= 2; // Repel
+                    ctx.fillStyle = '#ffffff';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#00DFD8';
+                } else {
+                    ctx.fillStyle = '#00DFD8';
+                    ctx.shadowBlur = 0;
+                }
+                symbol.draw(ctx)
+            });
+            ctx.shadowBlur = 0;
+        }
+
+        // --- Animation 2: Neural Network ---
+        let particles = [];
+        class Particle {
+            constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2 + 1; this.speedX = Math.random() * 0.4 - 0.2; this.speedY = Math.random() * 0.4 - 0.2; }
+            update() { this.x += this.speedX; this.y += this.speedY; if (this.x < 0 || this.x > canvas.width) this.speedX *= -1; if (this.y < 0 || this.y > canvas.height) this.speedY *= -1; }
+            draw() { ctx.fillStyle = 'rgba(0, 223, 216, 0.8)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        }
+        function initNeural() {
+            particles = [];
+            for (let i = 0; i < 100; i++) particles.push(new Particle());
+        }
+        function drawNeural() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                for (let j = i; j < particles.length; j++) {
+                    const dist = Math.sqrt(Math.pow(particles[i].x - particles[j].x, 2) + Math.pow(particles[i].y - particles[j].y, 2));
+                    if (dist < 120) {
+                        ctx.beginPath(); ctx.strokeStyle = `rgba(0, 223, 216, ${1 - dist / 120})`; ctx.lineWidth = 0.2; ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                    }
+                }
+            }
+            const mouseDist = 150;
+            for (let i = 0; i < particles.length; i++) {
+                const dist = Math.sqrt(Math.pow(mouse.x - particles[i].x, 2) + Math.pow(mouse.y - particles[i].y, 2));
+                if (dist < mouseDist) {
+                     ctx.beginPath(); ctx.strokeStyle = `rgba(0, 124, 240, ${1 - dist / mouseDist})`; ctx.lineWidth = 0.5; ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(particles[i].x, particles[i].y); ctx.stroke();
+                }
+            }
+        }
+        
+        // --- Animation 3: Floating Glyphs ---
+        let glyphs = [];
+        const glyphChars = ['Σ', '∫', '∞', 'β', 'α', 'λ', 'π', 'Δ', 'Ω'];
+        function initGlyphs() {
+            glyphs = [];
+            for (let i = 0; i < 50; i++) {
+                glyphs.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 10 + 10,
+                    speedX: Math.random() * 0.5 - 0.25,
+                    speedY: Math.random() * 0.5 - 0.25,
+                    char: glyphChars[Math.floor(Math.random() * glyphChars.length)]
+                });
+            }
+        }
+        function drawGlyphs() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            glyphs.forEach(glyph => {
+                const dist = Math.sqrt(Math.pow(glyph.x - mouse.x, 2) + Math.pow(glyph.y - mouse.y, 2));
+                if (dist < 100) {
+                    glyph.x += (glyph.x - mouse.x) * 0.03;
+                    glyph.y += (glyph.y - mouse.y) * 0.03;
+                }
+                glyph.x += glyph.speedX;
+                glyph.y += glyph.speedY;
+                if (glyph.x < 0 || glyph.x > canvas.width) glyph.speedX *= -1;
+                if (glyph.y < 0 || glyph.y > canvas.height) glyph.speedY *= -1;
+
+                ctx.font = `${glyph.size}px Inter`;
+                ctx.fillStyle = `rgba(0, 223, 216, 0.2)`;
+                ctx.fillText(glyph.char, glyph.x, glyph.y);
+            });
+        }
+
+        // --- Animation 4: Code Stream ---
+        let codeSnippets = [];
+        const codeChars = ['</>', '{}', '=>', '()', '[]', 'const', 'let', 'var'];
+        function initCode() {
+            codeSnippets = [];
+            for (let i = 0; i < 50; i++) {
+                codeSnippets.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    speed: Math.random() * 1 + 0.5,
+                    char: codeChars[Math.floor(Math.random() * codeChars.length)],
+                    size: Math.random() * 8 + 8
+                });
+            }
+        }
+        function drawCode() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+             codeSnippets.forEach(snippet => {
+                const dist = Math.sqrt(Math.pow(snippet.x - mouse.x, 2) + Math.pow(snippet.y - mouse.y, 2));
+                let speed = snippet.speed;
+                if (dist < 100) {
+                    speed *= 3;
+                    ctx.fillStyle = `rgba(0, 124, 240, 0.8)`;
+                } else {
+                    ctx.fillStyle = `rgba(0, 223, 216, 0.2)`;
+                }
+                
+                ctx.font = `${snippet.size}px monospace`;
+                ctx.fillText(snippet.char, snippet.x, snippet.y);
+                snippet.x += speed;
+                if (snippet.x > canvas.width) {
+                    snippet.x = -100;
+                    snippet.y = Math.random() * canvas.height;
+                }
+            });
+        }
+
+        // --- Main Animation Loop & Controller ---
+        function animate(timeStamp) {
+            switch (currentAnimation) {
+                case 'rain': drawRain(timeStamp); break;
+                case 'neural': drawNeural(); break;
+                case 'glyphs': drawGlyphs(); break;
+                case 'code': drawCode(); break;
+            }
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        function switchAnimation(newAnimation) {
+            if (currentAnimation === newAnimation) return;
+            currentAnimation = newAnimation;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            switch (newAnimation) {
+                case 'rain': initRain(); break;
+                case 'neural': initNeural(); break;
+                case 'glyphs': initGlyphs(); break;
+                case 'code': initCode(); break;
+            }
+        }
+
+        // --- Intersection Observer to switch animations ---
+        const options = { root: null, rootMargin: '0px', threshold: 0.5 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const animationType = entry.target.getAttribute('data-animation');
+                    switchAnimation(animationType);
+                }
+            });
+        }, options);
+
+        document.querySelectorAll('section[data-animation]').forEach(section => {
+            observer.observe(section);
+        });
+        
+        // --- Event Listeners ---
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            switchAnimation(currentAnimation);
+        });
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.clientX;
+            mouse.y = event.clientY;
+        });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+
+        // Start the engine
+        initRain();
+        animate(0);
+
+        // --- Text Scramble Effect ---
+        class TextScramble {
+            constructor(el) { this.el = el; this.chars = '!<>-_\\/[]{}—=+*^?#________'; this.update = this.update.bind(this); }
+            setText(newText) {
+                const oldText = this.el.innerText; const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve); this.queue = [];
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || ''; const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40); const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                cancelAnimationFrame(this.frameRequest); this.frame = 0; this.update(); return promise;
+            }
+            update() {
+                let output = ''; let complete = 0;
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    if (this.frame >= end) { complete++; output += to; } 
+                    else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) { char = this.randomChar(); this.queue[i].char = char; }
+                        output += `<span class="text-slate-500">${char}</span>`;
+                    } else { output += from; }
+                }
+                this.el.innerHTML = output;
+                if (complete === this.queue.length) { this.resolve(); } 
+                else { this.frameRequest = requestAnimationFrame(this.update); this.frame++; }
+            }
+            randomChar() { return this.chars[Math.floor(Math.random() * this.chars.length)]; }
+        }
+
+        const heroTitle = document.getElementById('hero-title');
+        const fx = new TextScramble(heroTitle);
+        setTimeout(() => { fx.setText(heroTitle.getAttribute('data-value')); }, 1000);
+
+        // --- Other scripts (menu, scroll, form) ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!mobileMenu.classList.contains('hidden')) { mobileMenu.classList.add('hidden'); }
+                const targetElement = document.querySelector(this.getAttribute('href'));
+                if (targetElement) { targetElement.scrollIntoView({ behavior: 'smooth' }); }
+            });
+        });
+        const contactForm = document.getElementById('contact-form');
+        const formMessage = document.getElementById('form-message');
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            formMessage.textContent = 'Message Sent! I will get back to you soon.';
+            contactForm.reset();
+            setTimeout(() => { formMessage.textContent = ''; }, 5000);
+        });
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) { el.classList.add('visible'); }
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+    });
+    </script>
+</body>
+</html>
